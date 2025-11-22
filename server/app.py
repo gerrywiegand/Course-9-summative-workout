@@ -1,5 +1,6 @@
-from flask import Flask, make_response  # noqa: F401, I001
+from flask import Flask, make_response, request  # noqa: F401, I001
 from flask_migrate import Migrate
+from marshmallow import ValidationError  # noqa: F401
 
 from models import *
 
@@ -21,42 +22,90 @@ def home():
 
 @app.route("/exercises", methods=["GET"])
 def get_exercises():
-    pass  # Implementation goes here
+    exercises = Exercise.query.all()
+    schema = ExerciseSchema(many=True)
+    body = schema.dump(exercises)
+    return make_response(body, 200)
 
 
 @app.route("/exercises/<int:id>", methods=["GET"])
 def get_exercise(id):
-    pass  # Implementation goes here
+    schema = ExerciseSchema()
+    exercise = Exercise.query.filter_by(id=id).first()
+    if exercise:
+        body = schema.dump(exercise)
+        return make_response(body, 200)
+    else:
+        return make_response({"error": "Exercise not found"}, 404)
 
 
 @app.route("/exercises", methods=["POST"])
 def create_exercise():
-    pass  # Implementation goes here
+    schema = ExerciseSchema()
+    try:
+        data = schema.load(request.get_json())
+        new_exercise = Exercise(**data)
+        db.session.add(new_exercise)
+        db.session.commit()
+        body = schema.dump(new_exercise)
+        return make_response(body, 201)
+    except ValidationError as e:
+        return make_response({"errors": e.messages}, 400)
 
 
 @app.route("/exercises/<int:id>", methods=["DELETE"])
 def delete_exercise(id):
-    pass  # Implementation goes here
+    exercise = Exercise.query.filter_by(id=id).first()
+    if exercise:
+        db.session.delete(exercise)
+        db.session.commit()
+        return make_response("", 204)
+    else:
+        return make_response({"error": "Exercise not found"}, 404)
 
 
 @app.route("/workouts", methods=["GET"])
 def get_workouts():
-    pass  # Implementation goes here
+    workouts = Workout.query.all()
+    schema = WorkoutSchema(many=True)
+    body = schema.dump(workouts)
+    return make_response(body, 200)
 
 
 @app.route("/workouts/<int:id>", methods=["GET"])
 def get_workout(id):
-    pass  # Implementation goes here
+    schema = WorkoutSchema()
+    workout = Workout.query.filter_by(id=id).first()
+    if workout:
+        body = schema.dump(workout)
+        return make_response(body, 200)
+    else:
+        return make_response({"error": "Workout not found"}, 404)
 
 
 @app.route("/workouts", methods=["POST"])
 def create_workout():
-    pass  # Implementation goes here
+    schema = WorkoutSchema()
+    try:
+        data = schema.load(request.get_json())
+        new_workout = Workout(**data)
+        db.session.add(new_workout)
+        db.session.commit()
+        body = schema.dump(new_workout)
+        return make_response(body, 201)
+    except ValidationError as e:
+        return make_response({"errors": e.messages}, 400)
 
 
 @app.route("/workouts/<int:id>", methods=["DELETE"])
 def delete_workout(id):
-    pass  # Implementation goes here
+    workout = Workout.query.filter_by(id=id).first()
+    if workout:
+        db.session.delete(workout)
+        db.session.commit()
+        return make_response("", 204)
+    else:
+        return make_response({"error": "Workout not found"}, 404)
 
 
 @app.route(
@@ -64,7 +113,28 @@ def delete_workout(id):
     methods=["POST"],
 )
 def add_exercise_to_workout(workout_id, exercise_id):
-    pass  # Implementation goes here
+    schema = WorkoutExerciseSchema()
+    try:
+        workout = Workout.query.filter_by(id=workout_id).first()
+        exercise = Exercise.query.filter_by(id=exercise_id).first()
+        if not workout:
+            return make_response({"error": "Workout not found"}, 404)
+        if not exercise:
+            return make_response({"error": "Exercise not found"}, 404)
+        data = schema.load(request.get_json())
+        workout_exercise = WorkoutExercise(
+            workout_id=workout.id,
+            exercise_id=exercise.id,
+            reps=data.get("reps"),
+            sets=data.get("sets"),
+            duration_seconds=data.get("duration_seconds"),
+        )
+        db.session.add(workout_exercise)
+        db.session.commit()
+        body = schema.dump(workout_exercise)
+        return make_response(body, 201)
+    except ValidationError as e:
+        return make_response({"errors": e.messages}, 400)
 
 
 if __name__ == "__main__":
