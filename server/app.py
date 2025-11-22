@@ -29,7 +29,9 @@ def get_exercises():
 
 @app.route("/exercises/<int:id>", methods=["GET"])
 def get_exercise(id):
-    pass  # Implementation goes here
+    exercise = Exercise.query.get_or_404(id)
+    exercise_schema = ExerciseSchema()
+    return jsonify(exercise_schema.dump(exercise)), 200
 
 
 @app.route("/exercises", methods=["POST"])
