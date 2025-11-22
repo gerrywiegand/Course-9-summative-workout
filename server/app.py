@@ -31,7 +31,7 @@ def get_exercises():
 @app.route("/exercises/<int:id>", methods=["GET"])
 def get_exercise(id):
     schema = ExerciseSchema()
-    exercise = Exercise.query.filter_by(id)
+    exercise = Exercise.query.filter_by(id=id).first()
     if exercise:
         body = schema.dump(exercise)
         return make_response(body, 200)
@@ -41,7 +41,16 @@ def get_exercise(id):
 
 @app.route("/exercises", methods=["POST"])
 def create_exercise():
-    pass  # Implementation goes here
+    schema = ExerciseSchema()
+    try:
+        data = schema.load(request.get_json())
+        new_exercise = Exercise(**data)
+        db.session.add(new_exercise)
+        db.session.commit()
+        body = schema.dump(new_exercise)
+        return make_response(body, 201)
+    except ValidationError as e:
+        return make_response({"errors": e.messages}, 400)
 
 
 @app.route("/exercises/<int:id>", methods=["DELETE"])
