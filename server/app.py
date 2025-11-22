@@ -30,7 +30,7 @@ def get_exercises():
 
 @app.route("/exercises/<int:id>", methods=["GET"])
 def get_exercise(id):
-    schema = ExerciseSchema()
+    schema = ExerciseDetailSchema()
     exercise = Exercise.query.filter_by(id=id).first()
     if exercise:
         body = schema.dump(exercise)
@@ -74,7 +74,7 @@ def get_workouts():
 
 @app.route("/workouts/<int:id>", methods=["GET"])
 def get_workout(id):
-    schema = WorkoutSchema()
+    schema = WorkoutDetailSchema()
     workout = Workout.query.filter_by(id=id).first()
     if workout:
         body = schema.dump(workout)

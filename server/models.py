@@ -125,6 +125,7 @@ class WorkoutExerciseSchema(Schema):
     reps = fields.Int(allow_none=True, validate=validate.Range(min=1))
     sets = fields.Int(allow_none=True, validate=validate.Range(min=1))
     duration_seconds = fields.Int(allow_none=True, validate=validate.Range(min=1))
+    exercise = fields.Nested("ExerciseSchema", only=("id", "name"), dump_only=True)
 
     # must provide either reps/sets or duration_seconds
     @validates_schema
@@ -134,3 +135,25 @@ class WorkoutExerciseSchema(Schema):
 
         if not has_reps_sets and not has_duration:
             raise ValidationError("Must provide either reps/sets or duration_seconds")
+
+
+# Nested schemas for detail views with related data
+class WorkoutDetailSchema(Schema):
+    id = fields.Int(dump_only=True)
+    date = fields.Date()
+    duration_minutes = fields.Int()
+    notes = fields.Str()
+    workout_exercises = fields.Nested(WorkoutExerciseSchema, many=True, dump_only=True)
+
+
+class ExerciseDetailSchema(Schema):
+    id = fields.Int(dump_only=True)
+    name = fields.Str()
+    category = fields.Str()
+    equipment_needed = fields.Bool()
+    workouts = fields.Nested(
+        "WorkoutSchema",
+        many=True,
+        only=("id", "date", "duration_minutes"),
+        dump_only=True,
+    )
