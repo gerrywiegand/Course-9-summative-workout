@@ -55,12 +55,21 @@ def create_exercise():
 
 @app.route("/exercises/<int:id>", methods=["DELETE"])
 def delete_exercise(id):
-    pass  # Implementation goes here
+    exercise = Exercise.query.filter_by(id=id).first()
+    if exercise:
+        db.session.delete(exercise)
+        db.session.commit()
+        return make_response("", 204)
+    else:
+        return make_response({"error": "Exercise not found"}, 404)
 
 
 @app.route("/workouts", methods=["GET"])
 def get_workouts():
-    pass  # Implementation goes here
+    workouts = Workout.query.all()
+    schema = WorkoutSchema(many=True)
+    body = schema.dump(workouts)
+    return make_response(body, 200)
 
 
 @app.route("/workouts/<int:id>", methods=["GET"])
