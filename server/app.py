@@ -74,7 +74,13 @@ def get_workouts():
 
 @app.route("/workouts/<int:id>", methods=["GET"])
 def get_workout(id):
-    pass  # Implementation goes here
+    schema = WorkoutSchema()
+    workout = Workout.query.filter_by(id=id).first()
+    if workout:
+        body = schema.dump(workout)
+        return make_response(body, 200)
+    else:
+        return make_response({"error": "Workout not found"}, 404)
 
 
 @app.route("/workouts", methods=["POST"])
