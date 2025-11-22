@@ -2,7 +2,7 @@
 
 ## Description
 
-A backend API for tracking workouts and exercises, designed for personal trainers to manage workout routines. Built with Flask, SQLAlchemy, and Marshmallow, this application provides a RESTful API for creating and managing exercises, workouts, and linking exercises to workouts with specific sets, reps, or duration.
+A backend API for tracking workouts and exercises. Built with Flask, SQLAlchemy, and Marshmallow, this application provides a RESTful API for creating and managing exercises, workouts, and linking exercises to workouts with specific sets, reps, or duration.
 
 ## Features
 
@@ -72,12 +72,12 @@ A backend API for tracking workouts and exercises, designed for personal trainer
 #### `GET /exercises`
 
 - **Description:** Retrieve all exercises
-- **Response:** 200 OK with array of exercise objects
+- **Response:** 200 status with array of exercise objects
 
 #### `GET /exercises/<id>`
 
 - **Description:** Retrieve a single exercise by ID
-- **Response:** 200 OK with exercise object, or 404 if not found
+- **Response:** 200 status with exercise object, or 404 if not found
 
 #### `POST /exercises`
 
@@ -104,12 +104,12 @@ A backend API for tracking workouts and exercises, designed for personal trainer
 #### `GET /workouts`
 
 - **Description:** Retrieve all workouts
-- **Response:** 200 OK with array of workout objects
+- **Response:** 200 status with array of workout objects
 
 #### `GET /workouts/<id>`
 
 - **Description:** Retrieve a single workout by ID
-- **Response:** 200 OK with workout object, or 404 if not found
+- **Response:** 200 status with workout object, or 404 if not found
 
 #### `POST /workouts`
 
@@ -192,18 +192,6 @@ A backend API for tracking workouts and exercises, designed for personal trainer
 - **Marshmallow:** Serialization/deserialization and validation
 - **SQLite:** Database (development)
 
-## Project Structure
-
 ```
-Course-9-summative-workout/
-├── server/
-│   ├── app.py              # Main application and routes
-│   ├── models.py           # Database models and schemas
-│   ├── seed.py             # Database seeding script
-│   ├── instance/
-│   │   └── app.db          # SQLite database
-│   └── migrations/         # Database migration files
-├── Pipfile                 # Dependencies
-├── Pipfile.lock            # Locked dependencies
-└── README.md               # This file
+
 ```
