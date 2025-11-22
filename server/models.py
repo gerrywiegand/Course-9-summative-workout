@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy  # noqa: I001
 from sqlalchemy.orm import validates  # noqa: F401
 from datetime import date as dt_date
+import warnings
 
 db = SQLAlchemy()
 
@@ -58,6 +59,17 @@ class Workout(db.Model):
         if date > dt_date.today():
             raise ValueError("Workout date cannot be in the future.")
         return date
+
+    @validates("duration_minutes")
+    def validate_duration_minutes(self, key, duration_minutes):
+        if duration_minutes <= 0:
+            raise ValueError("Duration must be a positive integer.")
+        if duration_minutes > 180:  # 3 hours = 180 minutes
+
+            warnings.warn(
+                "Duration  exceeds 3 hours. Are you sure this is correct?",
+            )
+        return duration_minutes
 
     def __repr__(self):
         return f"<Workout {self.date} - {self.duration_minutes} mins>"
