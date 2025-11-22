@@ -34,11 +34,6 @@ def create_exercise():
     pass  # Implementation goes here
 
 
-@app.route("/exercises", methods=["PATCH"])
-def update_exercise():
-    pass  # Implementation goes here
-
-
 @app.route("/exercises/<int:id>", methods=["DELETE"])
 def delete_exercise(id):
     pass  # Implementation goes here
@@ -59,17 +54,15 @@ def create_workout():
     pass  # Implementation goes here
 
 
-@app.route("/workouts", methods=["PATCH"])
-def update_workout():
-    pass  # Implementation goes here
-
-
 @app.route("/workouts/<int:id>", methods=["DELETE"])
 def delete_workout(id):
     pass  # Implementation goes here
 
 
-@app.route("/workouts/<int:workout_id>/exercises/<int:exercise_id>", methods=["POST"])
+@app.route(
+    "/workouts/<int:workout_id>/exercises/<int:exercise_id>/workout_exercises",
+    methods=["POST"],
+)
 def add_exercise_to_workout(workout_id, exercise_id):
     pass  # Implementation goes here
 
