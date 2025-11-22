@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy  # noqa: I001
 from sqlalchemy.orm import validates  # noqa: F401
 from datetime import date as dt_date
+from marshmallow import Schema, fields  # noqa: F401
 import warnings
 
 db = SQLAlchemy()
@@ -34,6 +35,13 @@ class Exercise(db.Model):
 
     def __repr__(self):
         return f"<Exercise {self.name}>"
+
+
+class ExerciseSchema(Schema):
+    id = fields.Int(dump_only=True)
+    name = fields.Str(required=True)
+    category = fields.Str(required=True)
+    equipment_needed = fields.Bool()
 
 
 class Workout(db.Model):
@@ -75,6 +83,13 @@ class Workout(db.Model):
         return f"<Workout {self.date} - {self.duration_minutes} mins>"
 
 
+class WorkoutSchema(Schema):
+    id = fields.Int(dump_only=True)
+    date = fields.Date(required=True)
+    duration_minutes = fields.Int(required=True)
+    notes = fields.Str()
+
+
 class WorkoutExercise(db.Model):
     __tablename__ = "workout_exercise"
     id = db.Column(db.Integer, primary_key=True)
@@ -95,3 +110,12 @@ class WorkoutExercise(db.Model):
 
     def __repr__(self):
         return f"<WorkoutExercise Workout ID: {self.workout_id}, Exercise ID: {self.exercise_id}>"
+
+
+class WorkoutExerciseSchema(Schema):
+    id = fields.Int(dump_only=True)
+    workout_id = fields.Int(required=True)
+    exercise_id = fields.Int(required=True)
+    reps = fields.Int()
+    sets = fields.Int()
+    duration_seconds = fields.Int()
