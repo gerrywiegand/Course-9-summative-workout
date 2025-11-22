@@ -23,7 +23,7 @@ class Workout(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date, nullable=False)
     duration_minutes = db.Column(db.Integer, nullable=False)
-    notes = db.Column(db.Text(200))
+    notes = db.Column(db.Text, nullable=True)
 
     def __repr__(self):
         return f"<Workout {self.date} - {self.duration_minutes} mins>"
