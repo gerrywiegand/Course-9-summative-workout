@@ -13,5 +13,66 @@ db.init_app(app)
 
 # Define Routes here
 
+
+@app.route("/")
+def home():
+    return make_response("<h1>Welcome to the Workout Tracker API</h1>", 200)
+
+
+@app.route("/exercises")
+def get_exercises():
+    pass  # Implementation goes here
+
+
+@app.route("/exercises/<int:id>")
+def get_exercise(id):
+    pass  # Implementation goes here
+
+
+@app.route("/exercises")
+def create_exercise():
+    pass  # Implementation goes here
+
+
+@app.route("/exercises")
+def update_exercise():
+    pass  # Implementation goes here
+
+
+@app.route("/exercises/<int:id>")
+def delete_exercise(id):
+    pass  # Implementation goes here
+
+
+@app.route("/workouts")
+def get_workouts():
+    pass  # Implementation goes here
+
+
+@app.route("/workouts/<int:id>")
+def get_workout(id):
+    pass  # Implementation goes here
+
+
+@app.route("/workouts")
+def create_workout():
+    pass  # Implementation goes here
+
+
+@app.route("/workouts")
+def update_workout():
+    pass  # Implementation goes here
+
+
+@app.route("/workouts/<int:id>")
+def delete_workout(id):
+    pass  # Implementation goes here
+
+
+@app.route("/workouts/<int:workout_id>/exercises/<int:exercise_id>")
+def add_exercise_to_workout(workout_id, exercise_id):
+    pass  # Implementation goes here
+
+
 if __name__ == "__main__":
     app.run(port=5555, debug=True)
