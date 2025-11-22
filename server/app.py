@@ -1,5 +1,6 @@
-from flask import Flask, make_response  # noqa: F401, I001
+from flask import Flask, make_response, jsonify, request  # noqa: F401, I001
 from flask_migrate import Migrate
+from marshmallow import ValidationError  # noqa: F401
 
 from models import *
 
@@ -21,7 +22,9 @@ def home():
 
 @app.route("/exercises", methods=["GET"])
 def get_exercises():
-    pass  # Implementation goes here
+    exercises = Exercise.query.all()
+    exercise_schema = ExerciseSchema(many=True)
+    return jsonify(exercise_schema.dump(exercises)), 200
 
 
 @app.route("/exercises/<int:id>", methods=["GET"])
