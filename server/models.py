@@ -1,6 +1,13 @@
 from flask_sqlalchemy import SQLAlchemy  # noqa: I001
 from sqlalchemy.orm import validates  # noqa: F401
 from datetime import date as dt_date
+from marshmallow import (
+    Schema,
+    fields,
+    validate,
+    validates_schema,
+    ValidationError,
+)  # noqa: F401
 import warnings
 
 db = SQLAlchemy()
@@ -34,6 +41,13 @@ class Exercise(db.Model):
 
     def __repr__(self):
         return f"<Exercise {self.name}>"
+
+
+class ExerciseSchema(Schema):
+    id = fields.Int(dump_only=True)
+    name = fields.Str(required=True, validate=validate.Length(min=3))
+    category = fields.Str(required=True, validate=validate.Length(min=3))
+    equipment_needed = fields.Bool()
 
 
 class Workout(db.Model):
@@ -75,6 +89,13 @@ class Workout(db.Model):
         return f"<Workout {self.date} - {self.duration_minutes} mins>"
 
 
+class WorkoutSchema(Schema):
+    id = fields.Int(dump_only=True)
+    date = fields.Date(required=True)
+    duration_minutes = fields.Int(required=True, validate=validate.Range(min=1))
+    notes = fields.Str()
+
+
 class WorkoutExercise(db.Model):
     __tablename__ = "workout_exercise"
     id = db.Column(db.Integer, primary_key=True)
@@ -95,3 +116,21 @@ class WorkoutExercise(db.Model):
 
     def __repr__(self):
         return f"<WorkoutExercise Workout ID: {self.workout_id}, Exercise ID: {self.exercise_id}>"
+
+
+class WorkoutExerciseSchema(Schema):
+    id = fields.Int(dump_only=True)
+    workout_id = fields.Int(required=True)
+    exercise_id = fields.Int(required=True)
+    reps = fields.Int(allow_none=True, validate=validate.Range(min=1))
+    sets = fields.Int(allow_none=True, validate=validate.Range(min=1))
+    duration_seconds = fields.Int(allow_none=True, validate=validate.Range(min=1))
+
+    # must provide either reps/sets or duration_seconds
+    @validates_schema
+    def validate_at_least_one_metric(self, data, **kwargs):
+        has_reps_sets = data.get("reps") is not None or data.get("sets") is not None
+        has_duration = data.get("duration_seconds") is not None
+
+        if not has_reps_sets and not has_duration:
+            raise ValidationError("Must provide either reps/sets or duration_seconds")
