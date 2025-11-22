@@ -19,57 +19,57 @@ def home():
     return make_response("<h1>Welcome to the Workout Tracker API</h1>", 200)
 
 
-@app.route("/exercises")
+@app.route("/exercises", methods=["GET"])
 def get_exercises():
     pass  # Implementation goes here
 
 
-@app.route("/exercises/<int:id>")
+@app.route("/exercises/<int:id>", methods=["GET"])
 def get_exercise(id):
     pass  # Implementation goes here
 
 
-@app.route("/exercises")
+@app.route("/exercises", methods=["POST"])
 def create_exercise():
     pass  # Implementation goes here
 
 
-@app.route("/exercises")
+@app.route("/exercises", methods=["PATCH"])
 def update_exercise():
     pass  # Implementation goes here
 
 
-@app.route("/exercises/<int:id>")
+@app.route("/exercises/<int:id>", methods=["DELETE"])
 def delete_exercise(id):
     pass  # Implementation goes here
 
 
-@app.route("/workouts")
+@app.route("/workouts", methods=["GET"])
 def get_workouts():
     pass  # Implementation goes here
 
 
-@app.route("/workouts/<int:id>")
+@app.route("/workouts/<int:id>", methods=["GET"])
 def get_workout(id):
     pass  # Implementation goes here
 
 
-@app.route("/workouts")
+@app.route("/workouts", methods=["POST"])
 def create_workout():
     pass  # Implementation goes here
 
 
-@app.route("/workouts")
+@app.route("/workouts", methods=["PATCH"])
 def update_workout():
     pass  # Implementation goes here
 
 
-@app.route("/workouts/<int:id>")
+@app.route("/workouts/<int:id>", methods=["DELETE"])
 def delete_workout(id):
     pass  # Implementation goes here
 
 
-@app.route("/workouts/<int:workout_id>/exercises/<int:exercise_id>")
+@app.route("/workouts/<int:workout_id>/exercises/<int:exercise_id>", methods=["POST"])
 def add_exercise_to_workout(workout_id, exercise_id):
     pass  # Implementation goes here
 
